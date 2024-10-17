@@ -27,7 +27,10 @@ class Input:
         cls._choice = choice
 
     def get_choice(cls) -> int | str:
-        return cls._choice
+        try:
+            return cls._choice
+        except:
+            return None
 
 
 class InputBuilderMeta(ABC):

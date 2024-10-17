@@ -1,32 +1,11 @@
-from threading import Lock
 from time import sleep
 
+from engine.core import ThreadSafeSingletonMeta
 from engine.scene import EngineScene
 from engine.core.input_handler import InputHandler
 from engine.store import EngineStore
 
-class EngineMeta(type):
-    """
-    This is a thread-safe implementation of Singleton.
-    """
-
-    _instances = {}
-
-    _lock: Lock = Lock()
-    """
-    We now have a lock object that will be used to synchronize threads during
-    first access to the Singleton.
-    """
-
-    def __call__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls not in cls._instances:
-                instance = super().__call__(*args, **kwargs)
-                cls._instances[cls] = instance
-        return cls._instances[cls]
-
-
-class Engine(metaclass=EngineMeta):
+class Engine(metaclass=ThreadSafeSingletonMeta):
     _scene: EngineScene
     _store: EngineStore
     _input_handler: InputHandler

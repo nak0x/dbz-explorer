@@ -5,6 +5,7 @@ class HomeScene(scenes.Scene):
     def __init__(cls) -> None:
         super().__init__()
         cls._name = scenes.EngineSceneEnum.NOT_STARTED
+        cls._store = scenes.EngineStore()
 
     def build_input(cls) -> scenes.Input:
         input_builder = scenes.InputBuilder()
@@ -16,6 +17,7 @@ class HomeScene(scenes.Scene):
     def render_scene(cls):
         # Os compliant cli clearing
         os.system('cls' if os.name == 'nt' else 'clear')
+        print(cls._store._data)
         print(cls._name.value)
 
     def get_scene_input(cls) -> scenes.Input:
