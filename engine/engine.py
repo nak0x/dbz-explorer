@@ -1,45 +1,24 @@
-from threading import Lock
-from engine.state import (
-    EngineState,
-)
-from engine.core.input_handler import (
-    InputHandler,
-    InputBuilder
-)
-from engine.store import EngineStore
 from time import sleep
 
-class EngineMeta(type):
-    """
-    This is a thread-safe implementation of Singleton.
-    """
+from engine.core import ThreadSafeSingletonMeta
+from engine.scene import EngineScene
+from engine.core.input_handler import InputHandler
+from engine.store import EngineStore
 
-    _instances = {}
-
-    _lock: Lock = Lock()
-    """
-    We now have a lock object that will be used to synchronize threads during
-    first access to the Singleton.
-    """
-
-    def __call__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls not in cls._instances:
-                instance = super().__call__(*args, **kwargs)
-                cls._instances[cls] = instance
-        return cls._instances[cls]
-
-
-class Engine(metaclass=EngineMeta):
-    _state: EngineState
+class Engine(metaclass=ThreadSafeSingletonMeta):
+    _scene: EngineScene
     _store: EngineStore
-    _renderer: EngineRenderer
     _input_handler: InputHandler
 
     _interupt: bool
 
-    def __init__(cls, store: EngineStore, state: EngineState, input_handler: InputHandler) -> None:
-        cls._state = state
+    def __init__(
+            cls,
+            store: EngineStore,
+            scene: EngineScene,
+            input_handler: InputHandler
+    ) -> None:
+        cls._scene = scene
         cls._store = store
         cls._input_handler = input_handler
         cls._interupt = True
@@ -52,12 +31,17 @@ class Engine(metaclass=EngineMeta):
             sleep(0.016)
 
     def _handle_input(cls) -> None:
-        cls._input_handler.handle_input(state=cls._state,store=cls._store)
+        request = cls._scene.get_scene().get_scene_input()
+        cls._input_handler.handle_input(request)
 
     def _update(cls) -> None:
-        # Run the game logic
-        pass
+        # Run the game logic by calling the per scene compute logic
+        # TODO: Implement a command proxy
+        if cls._scene.get_choice() == "quit":
+            cls._scene.get_scene().home()
+
+        cls._scene.get_scene().compute()
 
     def _render(cls) -> None:
-        # Render the game view
-        pass
+        scene = cls._scene.get_scene()
+        scene.render_scene()

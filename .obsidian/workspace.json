@@ -148,5 +148,10 @@
     }
   },
   "active": "7df9dcb553ee4d0a",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "stores/character.py",
+    "stores/__pycache__/player.cpython-311.pyc",
+    "stores/__pycache__/__init__.cpython-311.pyc",
+    "stores/__pycache__"
+  ]
 }

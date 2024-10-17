@@ -1,20 +1,17 @@
-from engine.engine import (
+from engine import (
     Engine,
     EngineStore,
-    EngineState,
+    EngineScene,
     InputHandler
 )
+from scenes import HomeScene
 
-from engine.state import CreatingCharacterState
-
-initial_state = CreatingCharacterState()
-
-game_state = EngineState(initial_state)
+game_scene = EngineScene(HomeScene())
 game_store = EngineStore()
 game_input_handler = InputHandler()
 game_engine = Engine(
     store=game_store,
-    state=game_state,
+    scene=game_scene,
     input_handler=game_input_handler
 )
 

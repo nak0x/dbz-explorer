@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from engine.state import EngineState
 
 from engine.store import EngineStore
+from enums import EngineSceneEnum
 
 class Input:
-    _choice: int
+    _choice: int | str
     _options: list[str]
     _title: str
 
@@ -26,8 +26,11 @@ class Input:
     def set_choice(cls, choice: int) -> None:
         cls._choice = choice
 
-    def get_choice(cls) -> int:
-        return cls._choice
+    def get_choice(cls) -> int | str:
+        try:
+            return cls._choice
+        except:
+            return None
 
 
 class InputBuilderMeta(ABC):
@@ -78,20 +81,12 @@ class InputHandler:
         cls._history = []
         pass
 
-    def handle_input(cls, state: EngineState, store: EngineStore) -> Input:
-        match state.get_state().value:
-            case 'character_managment':
-                current_input = InputBuilder()
-                current_input.add_title("What do you want to do ?")
-                current_input.add_custom("Go trainning")
-                current_input.add_custom("Go fighting")
-                cls.execute_input(current_input.input)
-            case _:
-                current_input = InputBuilder()
-                current_input.add_title("Start or quit the game :")
-                current_input.add_custom("Start")
-                current_input.add_custom("Quit")
-                cls.execute_input(current_input.input)
+    def handle_input(cls, request: Input) -> Input:
+        choice = cls.execute_input(request)
+        # If choice === "quit" -> notify to quit the game
+        request.set_choice(choice)
+        cls._history.append(request)
+        return request
 
     def execute_input(cls, request: Input) -> Input:
         row_input = input(f"{request.get_options_str()} ~> ")
@@ -99,10 +94,7 @@ class InputHandler:
            choice = int(row_input)
         except ValueError:
             choice = row_input
-        # If choice === "quit" -> notify to quit the game
-        request.set_choice(choice)
-        cls._history.append(request)
-        return request
+        return choice
 
     def get_last_input(cls) -> Input:
         return cls._history[-1]
