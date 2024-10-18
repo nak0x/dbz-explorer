@@ -11,7 +11,7 @@ class Engine(metaclass=ThreadSafeSingletonMeta):
     _store: EngineStore
     _input_handler: InputHandler
 
-    _interupt: bool
+    _keep_alive: bool
 
     def __init__(
             self,
@@ -22,10 +22,10 @@ class Engine(metaclass=ThreadSafeSingletonMeta):
         self._scene = scene
         self._store = store
         self._input_handler = input_handler
-        self._interupt = True
+        self._keep_alive = True
 
     def run(self) -> None:
-        while self._interupt:
+        while self._keep_alive:
             # Os compliant cli clearing
             os.system('cls' if os.name == 'nt' else 'clear')
             self._render()
@@ -36,6 +36,9 @@ class Engine(metaclass=ThreadSafeSingletonMeta):
     def handle_input(self, request: InputHandler = None):
         response = self._scene.get_scene().get_scene_input()
         return response
+
+    def stop(self):
+        self._keep_alive = False
 
     def _update(self) -> None:
         # Run the game logic by calling the per scene compute logic
