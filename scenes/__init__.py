@@ -3,7 +3,6 @@ from typing import List
 
 from engine.core.input_handler import Input, InputBuilder
 from engine.scene import Scene
-from engine.store import EngineStore
 
 from enums import EngineSceneEnum
 

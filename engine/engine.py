@@ -1,8 +1,9 @@
 from time import sleep
+import os
 
 from engine.core import ThreadSafeSingletonMeta
 from engine.scene import EngineScene
-from engine.core.input_handler import InputHandler
+from engine.core.input_handler import InputHandler, Input
 from engine.store import EngineStore
 
 class Engine(metaclass=ThreadSafeSingletonMeta):
@@ -25,14 +26,18 @@ class Engine(metaclass=ThreadSafeSingletonMeta):
 
     def run(cls) -> None:
         while cls._interupt:
+            # Os compliant cli clearing
+            os.system('cls' if os.name == 'nt' else 'clear')
             cls._render()
-            cls._handle_input()
+            cls.handle_input()
             cls._update()
             sleep(0.016)
 
-    def _handle_input(cls) -> None:
-        request = cls._scene.get_scene().get_scene_input()
+    def handle_input(cls, request: Input = None):
+        if request == None:
+            request = cls._scene.get_scene().get_scene_input()
         cls._input_handler.handle_input(request)
+        return request.get_choice()
 
     def _update(cls) -> None:
         # Run the game logic by calling the per scene compute logic

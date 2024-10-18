@@ -1,4 +1,3 @@
-import os
 import scenes
 from stores import PlayerStore
 
@@ -6,16 +5,13 @@ class CreationScene(scenes.Scene):
     def __init__(cls) -> None:
         super().__init__()
         cls._name = scenes.EngineSceneEnum.PLAYER_CREATION
-        cls._store = scenes.EngineStore()
 
     def build_input(cls) -> scenes.Input:
         input_builder = scenes.InputBuilder()
-        input_builder.add_title("Chose a player name")
+        input_builder.add_title("chose a player name")
         return input_builder.input
 
     def render_scene(cls):
-        # Os compliant cli clearing
-        os.system('cls' if os.name == 'nt' else 'clear')
         print(cls._store._data.id)
         print(cls._name.value)
 
@@ -27,8 +23,7 @@ class CreationScene(scenes.Scene):
             cls.manage_character()
         else:
             choice = cls._input.get_choice()
-            player = PlayerStore()
-            player.id = "player"
+            player = PlayerStore("player")
             player.set_data("name", choice)
             cls._store.add_node("root", player)
             cls.manage_character()

@@ -1,11 +1,9 @@
-import os
 import scenes
 
 class HomeScene(scenes.Scene):
     def __init__(cls) -> None:
         super().__init__()
         cls._name = scenes.EngineSceneEnum.NOT_STARTED
-        cls._store = scenes.EngineStore()
 
     def build_input(cls) -> scenes.Input:
         input_builder = scenes.InputBuilder()
@@ -15,8 +13,6 @@ class HomeScene(scenes.Scene):
         return input_builder.input
 
     def render_scene(cls):
-        # Os compliant cli clearing
-        os.system('cls' if os.name == 'nt' else 'clear')
         print(cls._store._data)
         print(cls._name.value)
 
@@ -25,9 +21,9 @@ class HomeScene(scenes.Scene):
 
     def compute(cls) -> None:
         choice = cls._input.get_choice()
-        if choice in ["quit", 1]:
+        if choice == "Quit":
             exit(0)
-        elif choice == 0:
+        elif choice == "Start":
             cls.create_player()
 
 

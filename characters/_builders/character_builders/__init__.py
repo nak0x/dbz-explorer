@@ -1,0 +1,3 @@
+from characters._builders.character_builders.android_builder import AndroidBuilder
+from characters._builders.character_builders.saiyan_builder import SaiyanBuilder
+from characters._builders.character_builders.namekian_builder import NamekianBuilder

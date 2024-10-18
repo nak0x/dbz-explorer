@@ -1,0 +1,1 @@
+from characters._inventory.inventory import Inventory, Item
