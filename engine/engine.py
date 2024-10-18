@@ -1,8 +1,9 @@
 from time import sleep
+import os
 
 from engine.core import ThreadSafeSingletonMeta
 from engine.scene import EngineScene
-from engine.core.input_handler import InputHandler
+from engine.core.input_handler import InputHandler, Input
 from engine.store import EngineStore
 
 class Engine(metaclass=ThreadSafeSingletonMeta):
@@ -13,35 +14,37 @@ class Engine(metaclass=ThreadSafeSingletonMeta):
     _interupt: bool
 
     def __init__(
-            cls,
+            self,
             store: EngineStore,
             scene: EngineScene,
             input_handler: InputHandler
     ) -> None:
-        cls._scene = scene
-        cls._store = store
-        cls._input_handler = input_handler
-        cls._interupt = True
+        self._scene = scene
+        self._store = store
+        self._input_handler = input_handler
+        self._interupt = True
 
-    def run(cls) -> None:
-        while cls._interupt:
-            cls._render()
-            cls._handle_input()
-            cls._update()
+    def run(self) -> None:
+        while self._interupt:
+            # Os compliant cli clearing
+            os.system('cls' if os.name == 'nt' else 'clear')
+            self._render()
+            self.handle_input()
+            self._update()
             sleep(0.016)
 
-    def _handle_input(cls) -> None:
-        request = cls._scene.get_scene().get_scene_input()
-        cls._input_handler.handle_input(request)
+    def handle_input(self, request: InputHandler = None):
+        response = self._scene.get_scene().get_scene_input()
+        return response
 
-    def _update(cls) -> None:
+    def _update(self) -> None:
         # Run the game logic by calling the per scene compute logic
         # TODO: Implement a command proxy
-        if cls._scene.get_choice() == "quit":
-            cls._scene.get_scene().home()
+        if self._scene.get_choice() == "quit":
+            self._scene.get_scene().home()
 
-        cls._scene.get_scene().compute()
+        self._scene.get_scene().compute()
 
-    def _render(cls) -> None:
-        scene = cls._scene.get_scene()
+    def _render(self) -> None:
+        scene = self._scene.get_scene()
         scene.render_scene()

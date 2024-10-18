@@ -1,8 +1,10 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from engine.core.input_handler import Input
 from typing import List
 from enums import EngineSceneEnum
+
+from engine.core.input_handler import InputHandler
+from engine.store import EngineStore
 
 class EngineScene:
     """
@@ -12,88 +14,89 @@ class EngineScene:
     _scene = None
     value = None
 
-    def __init__(cls, scene: Scene) -> None:
-        cls.value = scene.name
-        cls.mutate(scene)
+    def __init__(self, scene: Scene) -> None:
+        self.value = scene.name
+        self.mutate(scene)
 
-    def mutate(cls, scene: Scene):
-        cls._scene = scene
-        cls.value = scene.name
-        cls._scene.context = cls
+    def mutate(self, scene: Scene):
+        self._scene = scene
+        self.value = scene.name
+        self._scene.context = self
 
     # Facade for accessing scene value more ealsy
-    def get_scene_name(cls) -> EngineSceneEnum:
-        return cls.value
+    def get_scene_name(self) -> EngineSceneEnum:
+        return self.value
 
-    def get_scene(cls) -> Scene:
-        return cls._scene
+    def get_scene(self) -> Scene:
+        return self._scene
 
-    def get_choice(cls) -> int | str:
-        return cls._scene.get_scene_input().get_choice()
+    def get_choice(self) -> int | str:
+        return self._scene.get_scene_input().get_last_input().get_choice()
 
 class Scene(ABC):
 
-    def __init__(cls) -> None:
-        cls._input = cls.build_input()
+    def __init__(self) -> None:
+        self._store = EngineStore()
+        self._input = self.build_input()
 
     # Property
 
     @property
-    def context(cls) -> EngineScene:
-        return cls._context
+    def context(self) -> EngineScene:
+        return self._context
 
     @context.setter
-    def context(cls, context: EngineScene) -> None:
-        cls._context = context
+    def context(self, context: EngineScene) -> None:
+        self._context = context
 
     @property
-    def name(cls) -> EngineSceneEnum:
-        return cls._name
+    def name(self) -> EngineSceneEnum:
+        return self._name
 
     @name.setter
-    def name(cls, name: EngineSceneEnum) -> None:
-        cls._name = name
+    def name(self, name: EngineSceneEnum) -> None:
+        self._name = name
 
     @name.getter
-    def name(cls) -> EngineSceneEnum:
-        return cls._name
+    def name(self) -> EngineSceneEnum:
+        return self._name
 
     # Methods
 
     @abstractmethod
-    def build_input(cls) -> Input:
+    def build_input(self) -> InputHandler:
         pass
 
     @abstractmethod
-    def render_scene(cls) -> None:
+    def render_scene(self) -> None:
         pass
 
     @abstractmethod
-    def get_scene_input(cls) -> Input:
+    def get_scene_input(self) -> InputHandler:
         pass
 
     @abstractmethod
-    def compute(cls) -> None:
+    def compute(self) -> None:
         pass
 
     # Scene State switch
 
     @abstractmethod
-    def create_player(cls) -> None:
+    def create_player(self) -> None:
         pass
 
     @abstractmethod
-    def train_character(cls) -> None:
+    def train_character(self) -> None:
         pass
 
     @abstractmethod
-    def fight_character(cls) -> None:
+    def fight_character(self) -> None:
         pass
 
     @abstractmethod
-    def manage_character(cls) -> None:
+    def manage_character(self) -> None:
         pass
 
     @abstractmethod
-    def home(cls) -> None:
+    def home(self) -> None:
         pass

@@ -1,51 +1,54 @@
-import os
+from engine.core.input_handler import (
+    InputBuilder,
+    Input,
+    InputHandler
+)
+from engine.scene import Scene
 import scenes
+from enums import EngineSceneEnum
 
-class HomeScene(scenes.Scene):
-    def __init__(cls) -> None:
+class HomeScene(Scene):
+    def __init__(self) -> None:
         super().__init__()
-        cls._name = scenes.EngineSceneEnum.NOT_STARTED
-        cls._store = scenes.EngineStore()
+        self._name = EngineSceneEnum.NOT_STARTED
 
-    def build_input(cls) -> scenes.Input:
-        input_builder = scenes.InputBuilder()
+    def build_input(self) -> InputHandler:
+        input_builder = InputBuilder()
         input_builder.add_title("Start or quit the game")
         input_builder.add_custom("Start")
         input_builder.add_custom("Quit")
         return input_builder.input
 
-    def render_scene(cls):
-        # Os compliant cli clearing
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print(cls._store._data)
-        print(cls._name.value)
+    def render_scene(self):
+        print(self._store._data)
+        print(self._name.value)
 
-    def get_scene_input(cls) -> scenes.Input:
-        return cls._input
+    def get_scene_input(self) -> Input:
+        return self._input
 
-    def compute(cls) -> None:
-        choice = cls._input.get_choice()
-        if choice in ["quit", 1]:
+    def compute(self) -> None:
+        choice = self._input.handle_input()
+        if choice == "Quit":
             exit(0)
-        elif choice == 0:
-            cls.create_player()
+        elif choice == "Start":
+            self.create_player()
 
 
     # Scene State switch
-    def create_player(cls) -> None:
-        cls._context.mutate(scenes.CreationScene())
+    def create_player(self) -> None:
+        self._context.mutate(scenes.CreationScene())
 
-    def fight_character(cls) -> None:
-        cls._context.mutate(scenes.FightScene())
+    def fight_character(self) -> None:
+        self._context.mutate(scenes.FightScene())
 
-    def manage_character(cls) -> None:
-        cls._context.mutate(scenes.ManageScene())
+    def manage_character(self) -> None:
+        self._context.mutate(scenes.ManageScene())
 
-    def train_character(cls) -> None:
-        cls._context.mutate(scenes.TrainScene())
+    def train_character(self) -> None:
+        self._context.mutate(scenes.TrainScene())
 
-    def home(cls) -> None:
+    def home(self) -> None:
         # Handle the case where we call the quit command on the home
-        if cls._input.get_choice() == "quit":
+        if self._input.handle_input() == "Quit":
             exit(0)
         raise Exception("Cannot mutate: Already at HomeScene.")

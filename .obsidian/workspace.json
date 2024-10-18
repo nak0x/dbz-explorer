@@ -149,9 +149,16 @@
   },
   "active": "7df9dcb553ee4d0a",
   "lastOpenFiles": [
-    "stores/character.py",
-    "stores/__pycache__/player.cpython-311.pyc",
-    "stores/__pycache__/__init__.cpython-311.pyc",
-    "stores/__pycache__"
+    "stores/__pycache__/inventory.cpython-311.pyc",
+    "characters/_factory/archetype/__pycache__/namekian.cpython-311.pyc",
+    "characters/_builders/character_builders/__pycache__/namekian_builder.cpython-311.pyc",
+    "characters/_factory/archetype/__pycache__/saiyan.cpython-311.pyc",
+    "characters/_builders/character_builders/__pycache__/saiyan_builder.cpython-311.pyc",
+    "characters/_factory/archetype/__pycache__/android.cpython-311.pyc",
+    "characters/_factory/archetype/__pycache__/__init__.cpython-311.pyc",
+    "characters/_factory/archetype/__pycache__",
+    "characters/_builders/character_builders/__pycache__/android_builder.cpython-311.pyc",
+    "characters/_builders/character_builders/__pycache__/__init__.cpython-311.pyc",
+    "characters/_builders/character_builders/__pycache__"
   ]
 }
