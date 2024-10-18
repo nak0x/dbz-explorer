@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List
 from enums import EngineSceneEnum
 
-from engine.core.input_handler import Input
+from engine.core.input_handler import InputHandler
 from engine.store import EngineStore
 
 class EngineScene:
@@ -31,7 +31,7 @@ class EngineScene:
         return self._scene
 
     def get_choice(self) -> int | str:
-        return self._scene.get_scene_input().get_choice()
+        return self._scene.get_scene_input().get_last_input().get_choice()
 
 class Scene(ABC):
 
@@ -64,7 +64,7 @@ class Scene(ABC):
     # Methods
 
     @abstractmethod
-    def build_input(self) -> Input:
+    def build_input(self) -> InputHandler:
         pass
 
     @abstractmethod
@@ -72,7 +72,7 @@ class Scene(ABC):
         pass
 
     @abstractmethod
-    def get_scene_input(self) -> Input:
+    def get_scene_input(self) -> InputHandler:
         pass
 
     @abstractmethod

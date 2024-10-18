@@ -1,11 +1,17 @@
+from engine.core.input_handler import (
+    InputBuilder,
+    InputHandler
+)
+from engine.scene import Scene
 import scenes
+from enums import EngineSceneEnum
 
-class TrainScene(scenes.Scene):
+class TrainScene(Scene):
 
     def render_scene(cls):
         return super().render_scene()
 
-    def get_scene_input(cls) -> scenes.Input:
+    def get_scene_input(cls) -> InputHandler:
         return super().get_scene_input()
 
     # Scene State switch
